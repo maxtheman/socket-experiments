@@ -22,9 +22,25 @@ if (target_host == None) or (target_port == None):
 	
 def connection_scan(target_host, target_port):
 	try:
-		connect_socket = skt.socket(AF_INET, SOCK_STREAM)
+		connect_socket = skt.socket(skt.AF_INET, skt.SOCK_STREAM)
 		connect_socket.connect((target_host, target_port))
 		print'[+]%d/tcp open' % target_port
 		connect_socket.close()
 	except:
 		print '[-]%d/tcp closed' % target_port
+		
+def port_scan(target_host, target_ports):
+	try:
+		target_ip = skt.gethostbyname(target_host)
+	except:
+		print '[-] Cannot resolve %s: Unkown host' % target_host
+		return
+	try:
+		target_name = sky.gethostbyaddr(target_ip)
+		print '\n[+] Scan Results for: ' + target_name[0]
+	except:
+		print '\n[+] Scan Results for: ' + target_ip
+	skt.setdefaulttimeout(1)
+	for port in target_ports:
+		print 'Scanning port %d' % port
+		connection_scan(target_host, port)
